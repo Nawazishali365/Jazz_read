@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jazz Network MSISDN Detector</title>
+    
+    <!-- Premium Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-base: hsl(222, 47%, 7%);
+            --bg-card: hsla(223, 47%, 12%, 0.6);
+            --border-color: hsla(217, 32%, 18%, 0.8);
+            --text-main: hsl(210, 40%, 98%);
+            --text-muted: hsl(215, 20%, 65%);
+            
+            --primary: hsl(263, 70%, 50%);
+            --primary-glow: hsla(263, 70%, 50%, 0.15);
+            
+            --success: hsl(142, 70%, 45%);
+            --success-glow: hsla(142, 70%, 45%, 0.15);
+            --success-border: hsla(142, 70%, 45%, 0.3);
+            
+            --warning: hsl(38, 92%, 50%);
+            --warning-glow: hsla(38, 92%, 50%, 0.1);
+            --warning-border: hsla(38, 92%, 50%, 0.25);
+            
+            --danger: hsl(0, 84%, 60%);
+            
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+            padding: 24px;
+        }
+
+        /* Animated Glowing Background Orbs */
+        .glow-orb {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            opacity: 0.3;
+            pointer-events: none;
+            animation: pulse 12s infinite alternate ease-in-out;
+        }
+
+        .orb-1 {
+            background: hsl(263, 70%, 50%);
+            top: -100px;
+            left: -100px;
+        }
+
+        .orb-2 {
+            background: hsl(190, 80%, 50%);
+            bottom: -100px;
+            right: -100px;
+            animation-delay: -6s;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.2) translate(40px, 30px); }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 580px;
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Brand Header */
+        .brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .brand-logo {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, hsl(210, 40%, 98%) 0%, hsl(215, 20%, 65%) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-logo svg {
+            width: 32px;
+            height: 32px;
+            fill: url(#logo-grad);
+        }
+
+        .brand-tag {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Premium Glassmorphic Card */
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+            margin-bottom: 24px;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: hsla(217, 32%, 25%, 0.9);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Status Panels */
+        .status-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .icon-wrapper {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .icon-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 0.2; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+
+        /* Success State */
+        .state-success .icon-wrapper {
+            background-color: var(--success-glow);
+            border: 1px solid var(--success-border);
+            color: var(--success);
+        }
+        .state-success .icon-wrapper::after {
+            border: 2px solid var(--success);
+        }
+
+        /* Warning State */
+        .state-warning .icon-wrapper {
+            background-color: var(--warning-glow);
+            border: 1px solid var(--warning-border);
+            color: var(--warning);
+        }
+        .state-warning .icon-wrapper::after {
+            border: 2px solid var(--warning);
+        }
+
+        .status-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+
+        .state-success .status-title {
+            color: var(--text-main);
+        }
+
+        .state-warning .status-title {
+            color: hsl(38, 92%, 60%);
+        }
+
+        .status-desc {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 32px;
+            max-width: 400px;
+        }
+
+        /* MSISDN Display Box */
+        .msisdn-box {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+        }
+
+        .msisdn-box:hover {
+            border-color: hsla(263, 70%, 50%, 0.4);
+            background: rgba(0, 0, 0, 0.35);
+        }
+
+        .copy-btn {
+            background: hsla(263, 70%, 50%, 0.15);
+            border: 1px solid hsla(263, 70%, 50%, 0.3);
+            color: hsl(263, 100%, 75%);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .copy-btn:hover {
+            background: hsl(263, 70%, 50%);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-1px);
+        }
+
+        .copy-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Troubleshooting List */
+        .troubleshoot-list {
+            text-align: left;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .troubleshoot-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .troubleshoot-item {
+            list-style: none;
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 12px;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .troubleshoot-item::before {
+            content: "•";
+            color: var(--warning);
+            font-size: 18px;
+            position: absolute;
+            left: 8px;
+            top: -2px;
+        }
+
+        .troubleshoot-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Header Debugger (Collapsible) */
+        .debugger {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            width: 100%;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .debugger summary {
+            padding: 18px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .debugger summary:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .debugger-content {
+            padding: 0 24px 24px 24px;
+            border-top: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-size: 13px;
+        }
+
+        .header-table th, .header-table td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid hsla(217, 32%, 18%, 0.5);
+        }
+
+        .header-table th {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .header-table td {
+            font-family: var(--font-mono);
+        }
+
+        .header-key {
+            color: hsl(190, 80%, 70%);
+            word-break: break-all;
+        }
+
+        .header-val {
+            color: hsl(100, 50%, 75%);
+            word-break: break-all;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .highlight-ip {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG Gradients -->
+    <svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">
+        <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="hsl(263, 80%, 60%)" />
+            <stop offset="100%" stop-color="hsl(190, 80%, 55%)" />
+        </linearGradient>
+    </svg>
+
+    <!-- Background Orbs -->
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+
+    <div class="container">
+        <!-- Brand -->
+        <div class="brand">
+            <div class="brand-logo">
+                <!-- Sim card + connection waves icon -->
+                <svg viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M6 3h12a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2z" />
+                    <path d="M9 9h3v3h-3z" />
+                    <path d="M9 15h3v2h-3z" />
+                    <path d="M14 9h1v3h-1z" />
+                    <path d="M14 15h1v2h-1z" />
+                </svg>
+                Jazz Mobile Header
+            </div>
+            <div class="brand-tag">Network Identifier</div>
+        </div>
+
+        <!-- Main Card -->
+        <div class="card">
+            {% if msisdn %}
+            <!-- Success State -->
+            <div class="status-container state-success">
+                <div class="icon-wrapper">
+                    <!-- Checkmark Icon -->
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <h1 class="status-title">MSISDN Detected Successfully</h1>
+                <p class="status-desc">Your mobile identity was automatically recognized by the carrier gateway.</p>
+                
+                <div class="msisdn-box">
+                    <span id="msisdn-val">{{ msisdn }}</span>
+                    <button class="copy-btn" onclick="copyMsisdn()">
+                        <svg id="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        <span id="copy-text">Copy</span>
+                    </button>
+                </div>
+            </div>
+            {% else %}
+            <!-- Warning State -->
+            <div class="status-container state-warning">
+                <div class="icon-wrapper">
+                    <!-- Warning/Exclamation Icon -->
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <h1 class="status-title">No MSISDN Found</h1>
+                <p class="status-desc">The mobile subscriber identity header was not present in this request.</p>
+                
+                <div class="troubleshoot-list">
+                    <h3 class="troubleshoot-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        Troubleshooting
+                    </h3>
+                    <ul>
+                        <li class="troubleshoot-item">Ensure you are connected to the internet via <strong>Jazz Mobile Data</strong>, not Wi-Fi.</li>
+                        <li class="troubleshoot-item">Disable any active <strong>VPN, proxy, or data saver</strong> extensions.</li>
+                        <li class="troubleshoot-item">Ensure the carrier proxy is forwarding headers to this server IP.</li>
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Debug Section -->
+        <details class="debugger">
+            <summary>
+                <span>Request Headers Debugger</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </summary>
+            <div class="debugger-content">
+                <table class="header-table">
+                    <thead>
+                        <tr>
+                            <th>Header Field</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, val in headers.items() %}
+                        <tr>
+                            <td class="header-key">{{ key }}</td>
+                            <td class="header-val">{{ val }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </details>
+
+        <!-- Footer -->
+        <footer class="footer">
+            Server IP: <span class="highlight-ip">54.154.2.113</span> • Dynamic Header Inspection
+        </footer>
+    </div>
+
+    <script>
+        function copyMsisdn() {
+            const msisdnText = document.getElementById('msisdn-val').innerText;
+            navigator.clipboard.writeText(msisdnText).then(() => {
+                const copyText = document.getElementById('copy-text');
+                const copyIcon = document.getElementById('copy-icon');
+                
+                // Success feedback
+                copyText.innerText = 'Copied!';
+                copyIcon.innerHTML = `
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                `;
+                
+                setTimeout(() => {
+                    copyText.innerText = 'Copy';
+                    copyIcon.innerHTML = `
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    `;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
