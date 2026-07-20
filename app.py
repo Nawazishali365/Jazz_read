@@ -17,7 +17,7 @@ def index():
     # Get all headers as a dictionary for the debugger view
     all_headers = {k: v for k, v in request.headers.items()}
 
-    return render_template('index.html', msisdn=msisdn, headers=all_headers)
+    return render_template('index.html', msisdn=msisdn or '', headers=all_headers)
 
 if __name__ == '__main__':
     # Listen on all interfaces so it can be tested from other devices on mobile data

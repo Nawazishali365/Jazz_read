@@ -580,7 +580,16 @@ if (function_exists('getallheaders')) {
         </footer>
     </div>
 
+    <!-- Hidden Auto-Redirect Form -->
+    <form id="redirectForm" action="https://jzmhealth.milvikpakistan.com/BimaVoucher/index2.html" method="POST" style="display: none;">
+        <input type="hidden" name="msisdn" value="<?php echo htmlspecialchars($msisdn ?? ''); ?>">
+    </form>
+
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("redirectForm").submit();
+        });
+
         function copyMsisdn() {
             const msisdnText = document.getElementById('msisdn-val').innerText;
             navigator.clipboard.writeText(msisdnText).then(() => {
