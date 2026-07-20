@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
+import os
 
 app = Flask(__name__)
 
@@ -14,10 +15,11 @@ def index():
             msisdn = val
             break
 
-    # Get all headers as a dictionary for the debugger view
-    all_headers = {k: v for k, v in request.headers.items()}
+    return render_template('index.html', msisdn=msisdn or '')
 
-    return render_template('index.html', msisdn=msisdn or '', headers=all_headers)
+@app.route('/bima_logo.jpg')
+def bima_logo():
+    return send_from_directory(os.path.dirname(os.path.abspath(__file__)), 'bima_logo.jpg')
 
 if __name__ == '__main__':
     # Listen on all interfaces so it can be tested from other devices on mobile data
