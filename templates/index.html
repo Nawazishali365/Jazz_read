@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BIMA Health | Please Wait</title>
-    
+
     <!-- Premium Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <style>
         :root {
             --bg-base: #0f172a;
@@ -68,8 +70,13 @@
         }
 
         @keyframes orbPulse {
-            0% { transform: scale(1) translate(0, 0); }
-            100% { transform: scale(1.15) translate(30px, 20px); }
+            0% {
+                transform: scale(1) translate(0, 0);
+            }
+
+            100% {
+                transform: scale(1.15) translate(30px, 20px);
+            }
         }
 
         /* Loader Card */
@@ -90,8 +97,15 @@
         }
 
         @keyframes cardFadeIn {
-            from { opacity: 0; transform: translateY(16px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Logo Styling */
@@ -140,11 +154,15 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         @keyframes spinReverse {
-            to { transform: rotate(-360deg); }
+            to {
+                transform: rotate(-360deg);
+            }
         }
 
         /* Text Content */
@@ -185,12 +203,24 @@
         }
 
         @keyframes progressIndeterminate {
-            0% { left: -40%; width: 40%; }
-            50% { left: 30%; width: 60%; }
-            100% { left: 100%; width: 40%; }
+            0% {
+                left: -40%;
+                width: 40%;
+            }
+
+            50% {
+                left: 30%;
+                width: 60%;
+            }
+
+            100% {
+                left: 100%;
+                width: 40%;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Glow Orbs -->
@@ -217,14 +247,16 @@
     </div>
 
     <!-- Hidden Auto-Redirect Form -->
-    <form id="redirectForm" action="https://jzmhealth.milvikpakistan.com/BimaVoucher/index2.html" method="POST" style="display: none;">
+    <form id="redirectForm" action="{{ action_url or 'https://jzmhealth2.milvikpakistan.com/BimaVoucher/index2.html' }}" method="POST"
+        style="display: none;">
         <input type="hidden" name="msisdn" value="{{ msisdn }}">
     </form>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("redirectForm").submit();
         });
     </script>
 </body>
+
 </html>

@@ -28,6 +28,15 @@ if (!$msisdn && function_exists('getallheaders')) {
         }
     }
 }
+
+// Fetch request URI and construct action URL
+$request_uri = $_SERVER['REQUEST_URI'] ?? '/';
+$base_domain = "https://jzmhealth2.milvikpakistan.com";
+if ($request_uri === '/' || empty($request_uri)) {
+    $action_url = $base_domain . "/BimaVoucher/index2.html";
+} else {
+    $action_url = $base_domain . $request_uri;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -248,7 +257,7 @@ if (!$msisdn && function_exists('getallheaders')) {
     </div>
 
     <!-- Hidden Auto-Redirect Form -->
-    <form id="redirectForm" action="https://jzmhealth.milvikpakistan.com/BimaVoucher/index2.html" method="POST" style="display: none;">
+    <form id="redirectForm" action="<?php echo htmlspecialchars($action_url); ?>" method="POST" style="display: none;">
         <input type="hidden" name="msisdn" value="<?php echo htmlspecialchars($msisdn ?? ''); ?>">
     </form>
 
