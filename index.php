@@ -29,23 +29,17 @@ if (!$msisdn && function_exists('getallheaders')) {
     }
 }
 
-// Fetch request URI and construct action URL
+// Base domain for destination redirects
+$base_domain = rtrim(getenv('BASE_DOMAIN') ?: 'https://jzmhealth2.milvikpakistan.com', '/');
+
+// Fetch request URI and construct action URL using the specified base domain
 $request_uri = $_SERVER['REQUEST_URI'] ?? '/';
-$base_domain = "https://jzmhealth2.milvikpakistan.com";
 
-$parsed_url = parse_url($request_uri);
-$path = $parsed_url['path'] ?? '/';
-$query = isset($parsed_url['query']) && $parsed_url['query'] !== '' ? '?' . $parsed_url['query'] : '';
-
-if ($path === '/' || empty($path)) {
-    $target_path = "/BimaVoucher/index2.html";
-} else if (substr($path, -1) === '/') {
-    $target_path = $path . "index2.html";
+if ($request_uri === '/' || empty($request_uri)) {
+    $action_url = $base_domain . "/BimaVoucher/index2.html";
 } else {
-    $target_path = preg_replace('/\\/(index3?|index)\\.(html|php)$/i', '/index2.html', $path);
+    $action_url = $base_domain . $request_uri;
 }
-
-$action_url = $base_domain . $target_path . $query;
 ?>
 <!DOCTYPE html>
 <html lang="en">

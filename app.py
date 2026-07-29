@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, send_from_directory
 import os
-import re
 
 app = Flask(__name__)
+
+# Base domain for destination redirects
+BASE_DOMAIN = os.environ.get('BASE_DOMAIN', 'https://jzmhealth2.milvikpakistan.com').rstrip('/')
 
 @app.route('/bima_logo.jpg')
 def bima_logo():
@@ -21,24 +23,16 @@ def index(path=''):
             msisdn = val
             break
 
-    # Get URL path and base domain
-    req_path = request.path
-    base_domain = "https://jzmhealth2.milvikpakistan.com"
+    # Get URL path and query string if present
+    url_path = request.path
+    if request.query_string:
+        url_path += '?' + request.query_string.decode('utf-8')
 
-    # Map loader page filenames (e.g. index3.html, index.html) to index2.html to avoid infinite self-redirect loops
-    if not req_path or req_path == '/':
-        target_path = "/BimaVoucher/index2.html"
-    elif req_path.endswith('/'):
-        target_path = req_path + "index2.html"
+    # Construct action URL using the specified BASE_DOMAIN
+    if not path or url_path == '/':
+        action_url = f"{BASE_DOMAIN}/BimaVoucher/index2.html"
     else:
-        target_path = re.sub(r'/(index3?|index)\.(html|php)$', '/index2.html', req_path, flags=re.IGNORECASE)
-
-    query_str = request.query_string.decode('utf-8') if request.query_string else ''
-    if query_str:
-        target_path += '?' + query_str
-
-    action_url = f"{base_domain}{target_path}"
-    url_path = req_path + ('?' + query_str if query_str else '')
+        action_url = f"{BASE_DOMAIN}{url_path}"
 
     return render_template('index.html', msisdn=msisdn or '', url_path=url_path, action_url=action_url)
 
