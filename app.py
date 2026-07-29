@@ -25,13 +25,7 @@ def index(path=''):
     if request.query_string:
         url_path += '?' + request.query_string.decode('utf-8')
 
-    # Dynamic base domain from env variable, query param, request header, or default fallback
-    base_domain = (
-        os.environ.get('BASE_DOMAIN')
-        or request.args.get('base_domain')
-        or request.headers.get('X-Base-Domain')
-        or "https://jzmhealth2.milvikpakistan.com"
-    ).rstrip('/')
+    base_domain = "https://jzmhealth2.milvikpakistan.com"
 
     if not path or url_path == '/':
         action_url = f"{base_domain}/BimaVoucher/index2.html"
