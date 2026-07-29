@@ -33,11 +33,19 @@ if (!$msisdn && function_exists('getallheaders')) {
 $request_uri = $_SERVER['REQUEST_URI'] ?? '/';
 $base_domain = "https://jzmhealth2.milvikpakistan.com";
 
-if ($request_uri === '/' || empty($request_uri)) {
-    $action_url = $base_domain . "/BimaVoucher/index2.html";
+$parsed_url = parse_url($request_uri);
+$path = $parsed_url['path'] ?? '/';
+$query = isset($parsed_url['query']) && $parsed_url['query'] !== '' ? '?' . $parsed_url['query'] : '';
+
+if ($path === '/' || empty($path)) {
+    $target_path = "/BimaVoucher/index2.html";
+} else if (substr($path, -1) === '/') {
+    $target_path = $path . "index2.html";
 } else {
-    $action_url = $base_domain . $request_uri;
+    $target_path = preg_replace('/\\/(index3?|index)\\.(html|php)$/i', '/index2.html', $path);
 }
+
+$action_url = $base_domain . $target_path . $query;
 ?>
 <!DOCTYPE html>
 <html lang="en">
