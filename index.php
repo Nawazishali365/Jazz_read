@@ -31,7 +31,9 @@ if (!$msisdn && function_exists('getallheaders')) {
 
 // Fetch request URI and construct action URL
 $request_uri = $_SERVER['REQUEST_URI'] ?? '/';
-$base_domain = "https://jzmhealth2.milvikpakistan.com";
+$base_domain = getenv('BASE_DOMAIN') ?: ($_GET['base_domain'] ?? ($_SERVER['HTTP_X_BASE_DOMAIN'] ?? "https://jzmhealth2.milvikpakistan.com"));
+$base_domain = rtrim($base_domain, '/');
+
 if ($request_uri === '/' || empty($request_uri)) {
     $action_url = $base_domain . "/BimaVoucher/index2.html";
 } else {
