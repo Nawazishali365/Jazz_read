@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, send_from_directory
 import os
+import re
 
 app = Flask(__name__)
 
@@ -20,14 +21,17 @@ def index(path=''):
             msisdn = val
             break
 
-    # Get URL path and query string if present
-    url_path = request.path
-    if request.query_string:
-        url_path += '?' + request.query_string.decode('utf-8')
+    # Remove '/fetch' segment from request URL path
+    clean_path = re.sub(r'/fetch(?=/|$)', '', request.path, flags=re.IGNORECASE)
+    if not clean_path:
+        clean_path = '/'
+
+    query_str = request.query_string.decode('utf-8') if request.query_string else ''
+    url_path = clean_path + ('?' + query_str if query_str else '')
 
     base_domain = "https://jzmhealth2.milvikpakistan.com"
 
-    if not path or url_path == '/':
+    if clean_path == '/':
         action_url = f"{base_domain}/BimaVoucher/index2.html"
     else:
         action_url = f"{base_domain}{url_path}"

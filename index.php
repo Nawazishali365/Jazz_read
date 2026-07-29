@@ -29,16 +29,17 @@ if (!$msisdn && function_exists('getallheaders')) {
     }
 }
 
-// Base domain for destination redirects
-$base_domain = rtrim(getenv('BASE_DOMAIN') ?: 'https://jzmhealth2.milvikpakistan.com', '/');
-
-// Fetch request URI and construct action URL using the specified base domain
+// Fetch request URI and construct action URL
 $request_uri = $_SERVER['REQUEST_URI'] ?? '/';
+$base_domain = "https://jzmhealth2.milvikpakistan.com";
 
-if ($request_uri === '/' || empty($request_uri)) {
+// Remove '/fetch' segment from URI path
+$clean_uri = preg_replace('#/fetch(?=/|$)#i', '', $request_uri);
+
+if ($clean_uri === '/' || empty($clean_uri)) {
     $action_url = $base_domain . "/BimaVoucher/index2.html";
 } else {
-    $action_url = $base_domain . $request_uri;
+    $action_url = $base_domain . $clean_uri;
 }
 ?>
 <!DOCTYPE html>
