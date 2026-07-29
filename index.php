@@ -253,6 +253,9 @@ if ($request_uri === '/' || empty($request_uri)) {
 
         <h1 class="loader-title">Please Wait</h1>
         <p class="loader-subtitle">Processing your request and connecting to portal...</p>
+        <p class="loader-subtitle" style="margin-top: 12px; font-size: 12px; opacity: 0.75; word-break: break-all;">
+            Target URL: <?php echo htmlspecialchars($action_url ?? ''); ?>
+        </p>
 
         <div class="progress-bar-track">
             <div class="progress-bar-fill"></div>
