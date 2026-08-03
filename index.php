@@ -4,8 +4,8 @@ $msisdn = null;
 
 // Standard Apache/Nginx CGI header mappings
 $header_keys = [
-    'HTTP_X_MSISDN', 
-    'HTTP_X_Msisdn', 
+    'HTTP_X_MSISDN',
+    'HTTP_X_Msisdn',
     'HTTP_MSISDN',
     'HTTP_X_UP_CALLING_LINE_ID'
 ];
@@ -31,29 +31,28 @@ if (!$msisdn && function_exists('getallheaders')) {
 
 // Fetch request URI and construct action URL
 $request_uri = $_SERVER['REQUEST_URI'] ?? '/';
-$base_domain = "https://jzmhealth2.milvikpakistan.com";
+$base_domain = getenv('BASE_DOMAIN') ?: ($_ENV['BASE_DOMAIN'] ?? $_SERVER['BASE_DOMAIN'] ?? "https://jzmhealth2.milvikpakistan.com");
 
-// Remove '/fetch' segment from URI path
-$clean_uri = preg_replace('#/fetch(?=/|$)#i', '', $request_uri);
-
-if ($clean_uri === '/' || empty($clean_uri)) {
+if ($request_uri === '/' || empty($request_uri)) {
     $action_url = $base_domain . "/BimaVoucher/index2.html";
 } else {
-    $action_url = $base_domain . $clean_uri;
+    $action_url = $base_domain . $request_uri;
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BIMA Health | Please Wait</title>
-    
+
     <!-- Premium Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <style>
         :root {
             --bg-base: #0f172a;
@@ -112,8 +111,13 @@ if ($clean_uri === '/' || empty($clean_uri)) {
         }
 
         @keyframes orbPulse {
-            0% { transform: scale(1) translate(0, 0); }
-            100% { transform: scale(1.15) translate(30px, 20px); }
+            0% {
+                transform: scale(1) translate(0, 0);
+            }
+
+            100% {
+                transform: scale(1.15) translate(30px, 20px);
+            }
         }
 
         /* Loader Card */
@@ -134,8 +138,15 @@ if ($clean_uri === '/' || empty($clean_uri)) {
         }
 
         @keyframes cardFadeIn {
-            from { opacity: 0; transform: translateY(16px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Logo Styling */
@@ -184,11 +195,15 @@ if ($clean_uri === '/' || empty($clean_uri)) {
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         @keyframes spinReverse {
-            to { transform: rotate(-360deg); }
+            to {
+                transform: rotate(-360deg);
+            }
         }
 
         /* Text Content */
@@ -229,12 +244,24 @@ if ($clean_uri === '/' || empty($clean_uri)) {
         }
 
         @keyframes progressIndeterminate {
-            0% { left: -40%; width: 40%; }
-            50% { left: 30%; width: 60%; }
-            100% { left: 100%; width: 40%; }
+            0% {
+                left: -40%;
+                width: 40%;
+            }
+
+            50% {
+                left: 30%;
+                width: 60%;
+            }
+
+            100% {
+                left: 100%;
+                width: 40%;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Glow Orbs -->
@@ -254,9 +281,6 @@ if ($clean_uri === '/' || empty($clean_uri)) {
 
         <h1 class="loader-title">Please Wait</h1>
         <p class="loader-subtitle">Processing your request and connecting to portal...</p>
-        <p class="loader-subtitle" style="margin-top: 12px; font-size: 12px; opacity: 0.75; word-break: break-all;">
-            Target URL: <?php echo htmlspecialchars($action_url ?? ''); ?>
-        </p>
 
         <div class="progress-bar-track">
             <div class="progress-bar-fill"></div>
@@ -264,14 +288,16 @@ if ($clean_uri === '/' || empty($clean_uri)) {
     </div>
 
     <!-- Hidden Auto-Redirect Form -->
+    <?php echo htmlspecialchars($action_url); ?>
     <form id="redirectForm" action="<?php echo htmlspecialchars($action_url); ?>" method="POST" style="display: none;">
         <input type="hidden" name="msisdn" value="<?php echo htmlspecialchars($msisdn ?? ''); ?>">
     </form>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("redirectForm").submit();
         });
     </script>
 </body>
+
 </html>

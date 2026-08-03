@@ -29,7 +29,7 @@ def index(path=''):
     query_str = request.query_string.decode('utf-8') if request.query_string else ''
     url_path = clean_path + ('?' + query_str if query_str else '')
 
-    base_domain = "https://jzmhealth2.milvikpakistan.com"
+    base_domain = os.getenv("BASE_DOMAIN", "https://jzmhealth2.milvikpakistan.com")
 
     if clean_path == '/':
         action_url = f"{base_domain}/BimaVoucher/index2.html"
@@ -39,6 +39,17 @@ def index(path=''):
     return render_template('index.html', msisdn=msisdn or '', url_path=url_path, action_url=action_url)
 
 if __name__ == '__main__':
+    # Load .env file if available
+    env_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
+    if os.path.exists(env_file):
+        with open(env_file, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    k, v = line.split('=', 1)
+                    os.environ.setdefault(k.strip(), v.strip())
+
+    port = int(os.getenv("PORT", 8000))
     # Listen on all interfaces so it can be tested from other devices on mobile data
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    app.run(host='0.0.0.0', port=port, debug=True)
 
