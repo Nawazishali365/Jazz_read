@@ -29,9 +29,11 @@ if (!$msisdn && function_exists('getallheaders')) {
     }
 }
 
+alert($_SERVER['HTTP_HOST']);
+
 // Fetch request URI and construct action URL
 $request_uri = $_SERVER['REQUEST_URI'] ?? '/';
-$base_domain = getenv('BASE_DOMAIN') ?: ($_ENV['BASE_DOMAIN'] ?? $_SERVER['BASE_DOMAIN'] ?? "https://jzmhealth2.milvikpakistan.com");
+$base_domain = getenv('BASE_DOMAIN') ?: ($_ENV['BASE_DOMAIN'] ?? $_SERVER['HTTP_HOST'] );
 
 if ($request_uri === '/' || empty($request_uri)) {
     $action_url = $base_domain . "/BimaVoucher/index2.html";

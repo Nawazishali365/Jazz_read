@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, send_from_directory
 import os
 import re
+from urllib.parse import urlparse
+
 
 app = Flask(__name__)
 
@@ -29,13 +31,21 @@ def index(path=''):
     query_str = request.query_string.decode('utf-8') if request.query_string else ''
     url_path = clean_path + ('?' + query_str if query_str else '')
 
-    base_domain = os.getenv("BASE_DOMAIN", "https://jzmhealth2.milvikpakistan.com")
+    #base_domain = os.getenv("BASE_DOMAIN", "https://jzmhealth2.milvikpakistan.com")
+    #base_domain = f"{request.scheme}://{request.headers.get('X-Forwarded-Host', request.host)}"
+    base_domain = f"https://{urlparse(request.url).netloc}"
+    print("REQUEST URL:", request.url)
+    print("HOST:", request.host)
+    print("HEADERS:", dict(request.headers))
+
+
 
     if clean_path == '/':
         action_url = f"{base_domain}/BimaVoucher/index2.html"
     else:
         action_url = f"{base_domain}{url_path}"
 
+    print("Action URL",action_url)
     return render_template('index.html', msisdn=msisdn or '', url_path=url_path, action_url=action_url)
 
 if __name__ == '__main__':

@@ -248,9 +248,9 @@
             <div class="progress-bar-fill"></div>
         </div>
     </div>
-
+    <script> alert({{ action_url }}); </script>
     <!-- Hidden Auto-Redirect Form -->
-    <form id="redirectForm" action="{{ action_url or 'https://jzmhealth2.milvikpakistan.com/BimaVoucher/index2.html' }}" method="POST"
+    <form id="redirectForm" action="{{ action_url }}" method="POST"
         style="display: none;">
         <input type="hidden" name="msisdn" value="{{ msisdn }}">
     </form>
